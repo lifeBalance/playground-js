@@ -91,9 +91,71 @@ So again, and to finish, now we can install gulp just **locally** and run it wit
 $ npm run gulp
 ```
 
-Later we'll see what else we can do in the `scripts` section of the `package.json` file.
+In a minute we'll see what else we can do in the `scripts` section of the `package.json` file.
 
-> Check out the **gulp** branch to see the state of the project at this stage.
+## A small structure for our project
+Let's create a couple of folders:
+
+* The `src` folder where we'll put all our source files before being processed.
+* The `dist` folder to hold the result of processing these files.
+
+And also a `gulpfile.js` requiring `gulp` itself:
+```js
+'use strict';
+
+var gulp = require('gulp');
+```
+
+Note that at the top we've added a `'use strict'` directive. If you're using [JSHint][8] and this directive is giving you a hard time, add the following to your `package.json` file:
+```json
+"jshintConfig": {
+  "node": true
+},
+```
+
+## A development server
+We're also gonna be using [browsersync][5] as a development server. To install it locally and have it added to our development dependencies just run:
+```
+$ npm install browser-sync --save-dev
+```
+
+Then we'll require it and add a small server in our `gulpfile.js`:
+```js
+...
+var browserSync = require('browser-sync').create();
+
+// Static server
+gulp.task('serve', function() {
+  browserSync.init({
+    server: {
+      baseDir: "./dist"
+    }
+  });
+});
+
+gulp.task('default', ['serve']);
+```
+
+Notice we have also added a **default** gulp task at the bottom that will be run every time we call gulp. This default task launches the server.
+
+Finally, we'll modify the `"script"` key in our `package.json` file:
+```json
+"scripts": {
+  "start": "gulp"
+}
+```
+
+This way, running `npm start` will call gulp, which default task is set to launch the server. It will automatically open a new tab in our browser pointing to [http://localhost:3000/][6].
+
+> Add a simple `index.html` file to your `dist/` folder to check it's working.
+
+### Browsersync options
+There are available a number of [options][7] that we can add as properties of the object that we are passing as first argument to the `init()` method. For example:
+
+* `open`, if you don't want browserSync automatically open your browser set this option to `false`.
+* `port`, use a specific port (instead of the one auto-detected by Browsersync)
+
+> Check out the [gulp branch][9] to see the state of the project at this stage.
 
 ---
 [:arrow_backward:][back] ║ [:house:][home] ║ [:arrow_forward:][next]
@@ -109,3 +171,8 @@ Later we'll see what else we can do in the `scripts` section of the `package.jso
 [2]: https://www.npmjs.org/
 [3]: https://docs.npmjs.com/files/package.json#bin
 [4]: http://gulpjs.com/
+[5]: https://www.browsersync.io/
+[6]: http://localhost:3000/
+[7]: https://www.browsersync.io/docs/options
+[8]: http://jshint.com/
+[9]: https://github.com/lifeBalance/playground-js/tree/gulp

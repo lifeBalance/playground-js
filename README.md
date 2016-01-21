@@ -3,14 +3,29 @@ Sometimes I just want to try out JavaScript stuff such as algorithms or the new 
 
 Tools used in the project:
 
-* [Gulp][], to automatize everything.
-* [Browsersync][], for livereloading.
-* [Browserify][], for using modules.
-* [Babel][], so I can try out the last JavaScript features.
+* [Gulp][1], to automatize everything.
+* [Browsersync][2], as a development server.
 
 Also I like to take notes, so I'll be documenting the process of building this thing.
 
 ## Contents
 
-* [Installing Gulp][]
-* [Installing Browserify][]
+* [Installing Gulp][c1]
+
+
+---
+[:arrow_backward:][back] ║ [:house:][home] ║ [:arrow_forward:][next]
+
+<!-- navigation -->
+[home]: ../README.md
+[back]: ../README.md
+[next]: #
+
+
+<!-- links -->
+[1]: http://gulpjs.com/
+[2]: https://www.browsersync.io/
+
+
+<!-- contents -->
+[c1]: README/gulp.md
