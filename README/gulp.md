@@ -163,7 +163,7 @@ There are available a number of [options][7] that we can add as properties of th
 <!-- navigation -->
 [home]: ../README.md
 [back]: ../README.md
-[next]: #
+[next]: browserify.md
 
 
 <!-- links -->
