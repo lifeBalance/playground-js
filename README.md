@@ -10,7 +10,7 @@ Also I like to take notes, so I'll be documenting the process of building this t
 
 ## Contents
 
-* [Installing Gulp][c1]
+* [Installing Gulp and Browsersync][c1]
 
 
 ---
