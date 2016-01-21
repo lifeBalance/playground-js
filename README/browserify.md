@@ -141,6 +141,7 @@ gulp.task('default', ['serve', 'scripts']);
 ```
 
 What have we done:
+
 1. Added a line to our `serve` task to watch for changes in our JavaScript source files. When changes are detected the `scripts` task is run.
 2. In the `scripts` task we've done several things:
 
@@ -151,7 +152,7 @@ What have we done:
   * Write the `bundle.js` file.
   * Finally, refresh the browser when the bundle has been written.
 
-> Check out the [browserify branch][11] to see the state of the project at this stage.
+> Check out the [browserify branch][8] to see the state of the project at this stage.
 
 ---
 [:arrow_backward:][back] ║ [:house:][home] ║ [:arrow_forward:][next]
