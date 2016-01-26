@@ -5,28 +5,59 @@ var browserSync = require('browser-sync').create();
 var browserify  = require('browserify');
 var source      = require('vinyl-source-stream');
 var gutil       = require('gulp-util');
+var watchify    = require('watchify');
+var buffer      = require('vinyl-buffer');
+var sourcemaps  = require('gulp-sourcemaps');
 
 // Static server
 gulp.task('serve', function() {
   browserSync.init({
+    open: false,
+    logFileChanges: false,
     server: {
-      baseDir: "./dist"
+      baseDir: "./dist",
     }
   });
-  gulp.watch("src/js/*.js", ['scripts']);
 });
+
 
 // The `scripts` task
 gulp.task('scripts', function () {
-  return browserify('src/js/main.js')
-    .bundle()
-    .on('error', function (e) {
-      gutil.log(e);
-    })
-    .pipe(source('bundle.js')) // Creates in-memory vinyl file object.
-    .pipe(gulp.dest('dist/public/js')) // Written to dist/public/js/bundle.js
-    .pipe(browserSync.stream()); // Reload browser when bundle.js is written
+  var bundler = browserify({
+    entries: ['src/js/main.js'],
+    cache: {},
+    packageCache: {},
+    plugin: [watchify],
+    debug: true
+  });
+
+  bundler.plugin(watchify, {
+    delay: 100,
+    ignoreWatch: ['**/node_modules/**'],
+    poll: false
+  });
+
+  function bundle () {
+    return bundler
+      .bundle()
+      .on('error', function (err) {
+        gutil.log(gutil.colors.red('Browserify error:'), err.message);
+      })
+      .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(sourcemaps.write('../maps'))
+      .pipe(gulp.dest('dist/public/js'))
+      .pipe(browserSync.stream());
+  }
+
+  bundle(); // We have to call bundle() to get `update' events.
+  bundler.on('update', bundle);
+  bundler.on('log', function (e) {
+    gutil.log(gutil.colors.green('Browserified!'), e);
+  });
 });
 
+
 // The default task
-gulp.task('default', ['serve', 'scripts']);
+gulp.task('default', ['scripts', 'serve']);
