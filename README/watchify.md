@@ -32,73 +32,74 @@ var watchify    = require('watchify');
 And modify some tasks a bit:
 
 1. Let's start by getting rid of the `gulp.watch` method in our `'serve'` task, and while we're at it, add a couple of settings to the server (Browsersync):
-```js
-gulp.task('serve', function() {
-  browserSync.init({
-    open: false,           // Don't touch my browser dude
-    logFileChanges: false, // Don't be so chatty
-    server: {
-      baseDir: "./dist"
-    }
+  ```js
+  gulp.task('serve', function() {
+    browserSync.init({
+      open: false,           // Don't touch my browser dude
+      logFileChanges: false, // Don't be so chatty
+      server: {
+        baseDir: "./dist"
+      }
+    });
   });
-});
-```
+  ```
 
 2. Check what we've done with the `'scripts'` task:
 
   1. First we have declared a `bundler` variable, which will hold the Browserify instance returned by the call to `browserify`:
-  ```js
-  var bundler = browserify({
-    entries: ['src/js/main.js'],
-    cache: {},
-    packageCache: {},
-    plugin: [watchify]
-  });
-  ```
+    ```js
+    var bundler = browserify({
+      entries: ['src/js/main.js'],
+      cache: {},
+      packageCache: {},
+      plugin: [watchify]
+    });
+    ```
   Here we're passing several configuration options for **Browserify**, including `watchify` in the `plugin` property. Also, according to the [watchify documentation][3], when creating the browserify instance (`bundler`), you MUST set the `cache` and `packageCache` properties, it doesn't matter if they're empty objects.
 
   2. Next we can configure the `watchify` plugin passing our settings as an object:
-  ```js
-  bundler.plugin(watchify, {
-    delay: 100,
-    ignoreWatch: ['**/node_modules/**'],
-    poll: false
-  });
-  ```
+    ```js
+    bundler.plugin(watchify, {
+      delay: 100,
+      ignoreWatch: ['**/node_modules/**'],
+      poll: false
+    });
+    ```
 
   3. After that we create the function that will be called on each build:
-  ```js
-  function bundle () {
-    return bundler
-      .bundle() // This is a Browserify method.
-      .on('error', function (err) {
-        gutil.log(gutil.colors.red('Browserify error:'), err.message);
-      })
-      .pipe(source('bundle.js')) // Creates in-memory vinyl file object.
-      .pipe(gulp.dest('dist/public/js')) // Written to dist/public/js/bundle.js
-      .pipe(browserSync.stream()); // Reload browser when bundle.js is written
-  }
-  ```
+    ```js
+    function bundle () {
+      return bundler
+        .bundle() // This is a Browserify method.
+        .on('error', function (err) {
+          gutil.log(gutil.colors.red('Browserify error:'), err.message);
+        })
+        .pipe(source('bundle.js')) // Creates in-memory vinyl file object.
+        .pipe(gulp.dest('dist/public/js')) // Written to dist/public/js/bundle.js
+        .pipe(browserSync.stream()); // Reload browser when bundle.js is written
+    }
+    ```
 
   4. Finally we are doing two things:
-  ```js
-  bundle(); // We have to call bundle() to get `update' events.
-  bundler.on('update', bundle);
-  bundler.on('log', function (e) {
-    gutil.log(gutil.colors.green('Browserified!'), e); // Output build logs to terminal
-  });
-  ```
+    ```js
+    bundle(); // We have to call bundle() to get `update' events.
+    bundler.on('update', bundle);
+    bundler.on('log', function (e) {
+      gutil.log(gutil.colors.green('Browserified!'), e); // Output build logs to terminal
+    });
+    ```
 
   Also according to the [Watchify docs][3], Watchify will not emit `'update'` events until you've called `bundle()` once and completely drained the stream it returns.
 
   Then we've adding an event listener on `bundler`, which listens for the `update` event, emitted by Watchify when changes to a **dependency** have been saved. We use this event to trigger a call to the `bundle` function.
 
   Finally, we're listening for another Watchify event (`'log'`), which fires after a bundle has been created with messages of the form:
-
+    ```
     777 bytes written (0.01 seconds)
+    ```
 
 ## Source maps
-This `gulpfile` file works fine but it's missing something important. All the JavaScript source code that our application uses is contained inside the `bundle.js` file. If we open our browser's **developer tools** and check the console, we can see that the location of each of the `console.log` statements inside the `bundle.js` file:
+This `gulpfile` file works fine but it's missing something important. All the JavaScript source code that our application uses is contained inside the `bundle.js` file. If we open our browser's **developer tools** and check the console, we can see the location of each of the `console.log` statements inside the `bundle.js` file:
 
 ![with source maps](images/without_sourcemaps.png)
 
@@ -115,7 +116,7 @@ var bundler = browserify({
 });
 ```
 
-If we restart the server, the new build will contain the source map included in the last line as a comment. It looks like this:
+If we restart the server, the generated `bundle.js` file will contain the source map included in the **last line** as a comment. It looks like this:
 ```js
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2Z....
 ```
@@ -161,7 +162,7 @@ Some gulp plugins (gulp-sourcemaps is among them) take in **buffered** vinyl fil
 Now we just have to add the following lines to our `'scripts'` task:
 ```js
 ...
-.pipe(source('bundle.js')) // Creates in-memory vinyl-stream.
+.pipe(source('bundle.js')) // Creates virtual vinyl-stream file.
 .pipe(buffer()) // Converts vinyl-stream to vinyl-buffer.
 .pipe(sourcemaps.init({loadMaps: true})) // Loads existing map from Browserify.
 .pipe(sourcemaps.write('../maps')) // Write the maps to the ../maps directory.
