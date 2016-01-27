@@ -8,6 +8,8 @@ var gutil       = require('gulp-util');
 var watchify    = require('watchify');
 var buffer      = require('vinyl-buffer');
 var sourcemaps  = require('gulp-sourcemaps');
+var babelify    = require('babelify');
+
 
 // Static server
 gulp.task('serve', function() {
@@ -27,12 +29,16 @@ gulp.task('scripts', function () {
     entries: ['src/js/main.js'],
     cache: {},
     packageCache: {},
-    plugin: [watchify],
     debug: true
   });
 
+  bundler.transform(babelify, {
+    presets: ["es2015"],
+    only: /src\/js/,
+    sourceMaps: true
+  });
+
   bundler.plugin(watchify, {
-    delay: 100,
     ignoreWatch: ['**/node_modules/**'],
     poll: false
   });
@@ -52,10 +58,15 @@ gulp.task('scripts', function () {
   }
 
   bundle(); // We have to call bundle() to get `update' events.
-  bundler.on('update', bundle);
-  bundler.on('log', function (e) {
-    gutil.log(gutil.colors.green('Browserified!'), e);
+
+  bundler.on('update', function (ids) {
+    bundle();
+
+    ids.forEach(function (id) {
+      gutil.log(gutil.colors.green('Updated:'), id);
+    });
   });
+
 });
 
 

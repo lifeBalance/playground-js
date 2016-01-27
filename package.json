@@ -7,8 +7,11 @@
     "start": "gulp",
     "watch": "watchify src/main.js -o dist/public/js/bundle.js"
   },
-  "jshintConfig": {
-    "node": true
+  "eslintConfig": {
+    "node": true,
+    "browser": true,
+    "es6": true,
+    "modules": true
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,8 @@
   },
   "homepage": "https://github.com/lifeBalance/playground-js#readme",
   "devDependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "babelify": "^7.2.0",
     "browser-sync": "^2.11.1",
     "browserify": "^13.0.0",
     "gulp": "^3.9.0",

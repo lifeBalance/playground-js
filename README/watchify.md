@@ -181,7 +181,7 @@ Now, if we start the server our build process will output a `bundle.js.map` file
 <!-- navigation -->
 [home]: ../README.md
 [back]: browserify.md
-[next]: #
+[next]: babelify.md
 
 
 <!-- links -->

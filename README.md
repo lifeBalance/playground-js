@@ -6,7 +6,8 @@ Tools used in the project:
 * [Gulp][1], to automatize everything.
 * [Browsersync][2], as a development server.
 * [Browserify][3], for using modules.
-* [Watchify][4], a Browserify watcher plugin for incremental builds.
+* [Watchify][4], a Browserify watcher **plugin** for incremental builds.
+* [Babelify][5], a Browserify's **transform** for using the [Babel][6] transpiler
 
 Also I like to take notes, so I'll be documenting the process of building this thing.
 
@@ -15,6 +16,7 @@ Also I like to take notes, so I'll be documenting the process of building this t
 * [Installing Gulp and Browsersync][c1]
 * [Browserify][c2]
 * [Watchify and source maps][c3]
+* [Babelify: Using JavaScript latest features][c4]
 
 ---
 [:arrow_backward:][back] ║ [:house:][home] ║ [:arrow_forward:][next]
@@ -30,8 +32,11 @@ Also I like to take notes, so I'll be documenting the process of building this t
 [2]: https://www.browsersync.io/
 [3]: http://browserify.org/
 [4]: https://github.com/substack/watchify
+[5]: https://github.com/babel/babelify
+[6]: https://babeljs.io
 
 <!-- contents -->
 [c1]: README/gulp.md
 [c2]: README/browserify.md
 [c3]: README/watchify.md
+[c4]: README/babelify.md
