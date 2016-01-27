@@ -1,7 +1,7 @@
 # Using JavaScript's new features
 In June 2015 the **sixth edition** of the JavaScript standard was finally published under the official denomination of [ECMAScript 2015][1]. As of January 2016, the support for **ES2015** (aka ES6) varies among browsers. Not even the latest version of [Node.js][2] has full support for the new standard.
 
-The solution to this problem is translate the latest **ES6** code to the old and well supported **ES5** version, a process known as **transpilation**. There are several tools able to do that being the two most popular ones:
+The solution to this problem is to translate the latest **ES6** code, to the old and well supported **ES5** version, a process known as **transpilation**. There are several tools able to do that being the two most popular ones:
 
 * [Traceur][3]
 * [Babel][4]
@@ -11,7 +11,7 @@ We're just gonna focus on Babel here.
 ## Babel
 Babel has support for the latest version of JavaScript through syntax transformers. These allow you to use all the features of the new syntax, right now without waiting for full support in browsers or Node.js.
 
-The current project version is number **6**, and is maintained in [github][5]. The amount of packages in this repo may be overwhelming, so let's try to highlight the most important ones:
+Current the project is at **version 6**, and it's maintained in [github][5]. The amount of packages in this repo may be overwhelming, so let's try to highlight the most important ones:
 
 * `babel-core` is the core of babel, but we will rarely need to install this package since it is a dependency of other packages such as `babel-cli`, and it will be automatically installed when they are installed.
 * `babel-cli` is a command line interface to Babel and it includes the following commands:
@@ -24,7 +24,7 @@ The current project version is number **6**, and is maintained in [github][5]. T
 * `babel-register` lets you switch on Babel transpilation from within Node.js. After you do, all modules you require are automatically transpiled.
 
 ### Installing Babel
-While you can install Babel CLI globally on your machine, it's much better to install it **locally** project by project. We can install Babel CLI **locally** by running:
+While you can install Babel CLI globally on your machine, it's much better to install it **locally**, on a project by project basis. We can install Babel CLI **locally** by running:
 ```
 $ npm i babel-cli -D
 ```
@@ -47,21 +47,28 @@ Presets are **sets of plugins** that support various compilation scenarios. Some
 
 * [es2015][7] compiles ES6 (as described by the ECMAScript spec) to ES5
 * [react][8] compiles JSX to JavaScript and removes Flow type annotations
-* [es2015-node5][9] Contains just those plugins that are needed to upgrade Node.js 5 to full ES6. Therefore, a lot less is transpiled than with the es2015 preset.
+* [es2015-node5][9] Contains just those plugins that are needed to upgrade **Node.js 5** to **full ES6**. Therefore, a lot less is transpiled than with the es2015 preset.
 
 Check the [Babel site][10] for more info about them.
 
-Presets are installed via [npm][11]. Their package names are their names plus the prefix `babel-preset-`. For example, to install the preset `es2015` we would run:
+Presets are installed via [npm][11]. Their package names are their names plus the prefix `babel-preset-`. For example, to install the `es2015` preset we would run:
 
 ```
 $ npm i babel-preset-es2015 -D
 ```
 
 ### Command Line Usage
-Now that we have installed Babel itself and a preset, we could start using it from the command line:
-
+Now that we have installed Babel itself and a preset, we could start using it from the command line. Since we have installed it **locally**, we must add a line to our `scripts` property in the `package.json` file:
+```json
+"scripts": {
+  ...
+  "babel": "babel --presets es2015 script.js --out-file script-compiled.js"
+},
 ```
-$ babel --presets es2015 script.js --out-file script-compiled.js
+
+Then we can run just:
+```
+$ babel
 ```
 
 The line above will transpile `script.js` and write the output to `script-compiled.js`, using the `es2015` preset. There are a lot of **options** available to use with Babel, check the [whole list here][12].
@@ -85,7 +92,7 @@ Alternatively we can specify our `.babelrc` config from within `package.json` un
 ```
 
 ### Using Babel with Browserify: Babelify
-To start using Babel in our current setup we are gonna need to install:
+To start using **Babel** in our current setup we are gonna need to install:
 
 * A Browserify's **transform** named [Babelify][13].
 * The [babel-preset-es2015][7].
@@ -109,7 +116,7 @@ We have several ways to start using the `babelify` transform. We're just gonna a
 ...
 bundler.transform(babelify, {
   presets: ["es2015"],
-  only: /src\/js/, // Only files in the src/js folder.
+  only: /src\/js/, // Only files in the src/js folder will be processed.
   sourceMaps: true
 });
 ...
@@ -122,7 +129,7 @@ bundler.transform(babelify, {
 * With the `only` property we can specify a **regex** to match the directories we want to process.
 * The `sourceMaps` option must be set to `true`, otherwise we don't get maps.
 
-To try this out, let's rewrite our scripts using ES6 syntax. First `foo.js`:
+To try this out, let's rewrite our scripts using **ES6 syntax**. First `foo.js`:
 ```js
 let message = "I'm not in the global namespace anymore!"; // ES6 block scope local variable.
 
@@ -142,7 +149,17 @@ And that's it, if we run `npm start`, our browser's console should show the outp
 
 > Check out the [babelify branch][17] to see the state of the project at this stage.
 
+
 ---
+[:arrow_backward:][back] ║ [:house:][home] ║ [:arrow_forward:][next]
+
+<!-- navigation -->
+[home]: ../README.md
+[back]: watchify.md
+[next]: #
+
+
+<!-- links -->
 [1]: http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf
 [2]: https://nodejs.org/en/
 [3]: https://github.com/google/traceur-compiler
